@@ -1,7 +1,7 @@
 //#full-example
 package com.tandem6.attraction
 
-import akka.actor.ActorSystem
+import akka.actor.{ActorSystem, Props}
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory
@@ -18,9 +18,9 @@ object GajakoreaApp extends App {
   val port = config.getInt("http.port")
 
   implicit val system:ActorSystem = ActorSystem("GAJAKOREA")
-//  implicit val executionContext = system.dispatcher
-//  implicit val materializer = ActorMaterializer()
+  val jobReception = system.actorOf(Props[JobReception])
+  val server = new GajakoreaHttp(jobReception)
 
   val settings = ServerSettings(ConfigFactory.load).withVerboseErrorMessages(true)
-  GajakoreaHttp.startServer("localhost",8080, system)
+  server.startServer(host, port, settings, system)
 }
