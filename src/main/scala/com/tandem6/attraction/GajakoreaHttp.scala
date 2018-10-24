@@ -20,11 +20,8 @@ class GajakoreaHttp(jobReception: ActorRef) extends HttpApp {
         parameters('name.as[String]) { name =>
           val future = jobReception ? name
           val result = Await.result(future, timeout.duration).asInstanceOf[String]
-          complete {
-              result
-            }
+          complete(result)
           }
-        //complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>Say hello to akka-http</h1>"))
       }
     }
 
